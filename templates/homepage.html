@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewpoint" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="/static/styles/style.css">
+        <link rel="stylesheet" type="text/css" href="/static/style/styles.css">
     </head>
 
     <body>
@@ -22,9 +22,11 @@
                     <button class="submit">Add</button>
                 </form>
                 {%for status in status_table%}
-                <P>{{status.name}}</P>
+                    {%for atr in status%}
 
+                        <P>{{atr}}</P>
 
+                    {%endfor%}
                 {%endfor%}
             </div>
 
@@ -38,7 +40,7 @@
                     <select name="from_status">
                         
                         {%for status in status_table%}
-                            <option value={{status.name}}>{{status.name}}</option>
+                            <option value={{status[0]}}>{{status[0]}}</option>
                         {%endfor%}
                     </select>
 
@@ -46,7 +48,7 @@
                     <select name="to_status">
 
                         {%for status in status_table%}
-                            <option value={{status.name}}>{{status.name}}</option>
+                            <option value={{status[0]}}>{{status[0]}}</option>
                         {%endfor%}                       
                     </select>  
                     <button class="submit">Add</button>
