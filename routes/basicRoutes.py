@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, redirect
+from algorithms.update import update_orphans, update_init
+from classes.Transition import Transition
+from classes.Status import Status
 
 import setup
-from classes.Status import Status
-from classes.Transition import Transition
 
 basic_routes_handling = Blueprint('basic_routes_handling', __name__)
 db = setup.db
@@ -10,14 +11,25 @@ db = setup.db
 
 @basic_routes_handling.route("/", methods=['GET'])
 def get_status():
-    # pull tables
-    status_table = list(Status.query.all())
 
+    # packs data as: (Status.name, is_init, is_orphan, is_final)
+    status_table = []
+
+    for index in range(len(Status.query.all())):
+        status_table += [[Status.query.all()[index].name, False, True, True]]
+
+    # packs data as a list
     transition_table = list(Transition.query.all())
 
-    # @todo: add orphan/init/final
-    for trans in transition_table:
-        pass
+    # update init, orphan and final
+    if status_table:
+        status_table, init_status_name = update_init(status_table=status_table)
+
+        if transition_table:
+            update_orphans(database=db, status_table=status_table,
+                           init_status_name=init_status_name)
+
+        # @todo: write update_final
 
     return render_template("homepage.html", status_table=status_table, transition_table=transition_table,
                            status_name=request.args.get("statusName", default=""))
