@@ -61,14 +61,18 @@ def delete_status():
 
 @basic_routes_handling.route("/transition", methods=['post'])
 def add_transition():
-    # check for duplications
+    # checks for duplications in all fields
     if db.session.query(Transition.name).filter_by(name=request.form['name']).first() is None:
-        # create new status
-        new_transition = Transition(name=request.form['name'], to_status=request.form['to_status'],
-                                    from_status=request.form['from_status'])
-        db.session.add(new_transition)
-        db.session.commit()
-        return redirect('/')
+        if db.session.query(Transition).filter(Transition.from_status == request.form['from_status']).first() is None\
+                or db.session.query(Transition).filter(Transition.to_status == request.form['to_status']).first()\
+                is None:
+            # create new status
+            if request.form['name'] is not None:
+                new_transition = Transition(name=request.form['name'], to_status=request.form['to_status'],
+                                            from_status=request.form['from_status'])
+                db.session.add(new_transition)
+                db.session.commit()
+                return redirect('/')
     return redirect('/')
 
 
