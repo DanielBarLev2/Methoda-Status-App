@@ -4,17 +4,36 @@
     float: center;
     text-align: center;
     padding: 0.5em;
-
+    display: flex;
+    height: 1.5em;
+    align-items: center;
 }
 
 .centerElements{
     display: flex;
     justify-content: center;
     padding: 10px;
+
 }
 
-.float-child {
-    display: flex;
-    justify-content: center;
+.rowElements{
+    display: block;
+}
+
+.center{
     align-items: center;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.theBigRedThing{
+    background-color: red;
+    width: 150px;
+    height: 150px;
+    font-size: 32px;
+    border-radius: 82px
+}
+.br{
+    width: 10px;
 }

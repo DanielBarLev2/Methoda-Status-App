@@ -11,55 +11,90 @@
     <body>
 
         <h1 style="text-align: center;">Build A workflow</h1>
+        <div class="center">
+            <div class="centerElements">
+                <div>
+                    <h3>Add status</h3>
 
-        <div class="centerElements">
+                    <form class="element" action="/status" method="post">
+                        <input name="status_name" value="{{status_name}}" required/>
+                        <button class="submit">Add</button>
+                    </form>
 
-            <div>
-                <h3>Add status</h3>
+                    <ul class="rowElements">
+                        {%for status in status_table%}
+                            <li>
+                                <div class="element">
+                                    <form action="/init" method="post">
+                                        <input type="radio" onclick='sendPostRequest(this)' name="init_status" id={{status[0]}}>
+                                    </form>
+                                    
+                                    <p>{{status}}</p>
+                                
+                                    
+                                    <form action="/status/delete" method="post">
+                                        <button name="status_name" value={{status[0]}}>remove</button>
+                                    </form>
+                                </div>
+                            </li>
+                        {%endfor%}
+                    </ul>
+                </div>
+                <div>
+                    
+                    <h3>Add transition</h3>
+                    
+                    <form class="element" action="/transition" method="post">
+                        <input name="name" />
+                        
+                        <p>from: </p>
+                        <select name="from_status">
+                            
+                            {%for status in status_table%}
+                                <option value={{status[0]}}>{{status[0]}}</option>
+                            {%endfor%}
+                        </select>
 
-                <form class="element" action="/status" method="post">
-                    <input name="status_name" value="{{status_name1}}" required/>
-                    <button class="submit">Add</button>
-                </form>
-                {%for status in status_table%}
-                    {%for atr in status%}
+                        <p>to: </p>
+                        <select name="to_status">
 
-                        <P>{{atr}}</P>
+                            {%for status in status_table%}
+                                <option value={{status[0]}}>{{status[0]}}</option>
+                            {%endfor%}                       
+                        </select>  
+                        <button class="submit">Add</button>
+                    </form>
+
+                    {%for transition in transition_table%}
+                    <div class="element">
+                        <P>{{transition.name}}: {{transition.from_status}} ==> {{transition.to_status}}</P>
+
+                        <form action="/transition/delete" method="post">
+                            <button name="transition_name" value={{transition.name}}>remove</button>
+                        </form>
+                    </div>
 
                     {%endfor%}
-                {%endfor%}
+                </div>    
             </div>
-
-            <div>
-                <h3>Add transition</h3>
-
-                <form class="element float-child" action="/transition" method="post">
-                    <input name="name" />
-                    
-                    <p>from: </p>
-                    <select name="from_status">
-                        
-                        {%for status in status_table%}
-                            <option value={{status[0]}}>{{status[0]}}</option>
-                        {%endfor%}
-                    </select>
-
-                    <p>to: </p>
-                    <select name="to_status">
-
-                        {%for status in status_table%}
-                            <option value={{status[0]}}>{{status[0]}}</option>
-                        {%endfor%}                       
-                    </select>  
-                    <button class="submit">Add</button>
-                </form>
-
-                {%for transition in transition_table%}
-                <P>{{transition.name}}: {{transition.from_status}} -> {{transition.to_status}}</P>
-
-
-                {%endfor%}
-            </div>
+            <form action="/reset" method="post">
+                <button name="reset" class="theBigRedThing">reset</button>
+            </form>
         </div>
     </body>
+
+    <script>
+        function sendPostRequest(radioButton) {
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', '/init', true);
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          xhr.send(`option=${radioButton.value}`);
+        }
+      </script>
+    
+      
+      
+      
+      
+      
 </html>
