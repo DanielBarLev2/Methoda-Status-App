@@ -1,5 +1,5 @@
+from algorithms.update import update_orphans, update_init, update_finals, get_statuses_stats
 from flask import Blueprint, render_template, request, redirect
-from algorithms.update import update_orphans, update_init, update_finals
 from classes.Transition import Transition
 from classes.Status import Status
 
@@ -22,14 +22,16 @@ def get_status():
 
     # update init, orphan and final
     if status_table:
-        status_table, init_status_name = update_init(status_table=status_table)
+        status_table, init_status_name = update_init(status_table=status_table, new_init_status=status_table[0][0])
 
         if transition_table:
             update_orphans(database=db, status_table=status_table,
-                           init_status_name=init_status_name, global_init=init_status_name)
+                           init_status_name=init_status_name, counter=1)
 
             update_finals(database=db, status_table=status_table,
-                          init_status_name=init_status_name, global_init=init_status_name)
+                          init_status_name=init_status_name, counter=1)
+
+        status_table = get_statuses_stats(status_table)
 
     return render_template("homepage.html", status_table=status_table, transition_table=transition_table,
                            status_name=request.args.get("statusName", default=""))
@@ -67,7 +69,8 @@ def delete_status():
 
         for transition in transition_list:
             db.session.delete(transition)
-            db.session.commit()
+
+        db.session.commit()
 
         return redirect('/')
     return redirect('/')
