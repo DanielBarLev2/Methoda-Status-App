@@ -16,8 +16,8 @@
                 <div>
                     <h3>Add status</h3>
 
-                    <form class="element" action="/status" method="post">
-                        <input name="status_name" value="{{status_name}}" required/>
+                    <form class="element" action="/status?theChosenOne={{theChosenOne}}" method="post">
+                        <input name="status_name" value="{{status_name}}" autocomplete="off" required/>
                         <button class="submit">Add</button>
                     </form>
 
@@ -25,14 +25,14 @@
                         {%for status in status_table%}
                             <li>
                                 <div class="element">
-                                    <form action="/init" method="post">
-                                        <input type="radio" onclick='sendPostRequest(this)' name="init_status" id={{status[0]}}>
+                                    <form action="/init?theChosenOne={{theChosenOne}}" method="post">
+                                        <input type="radio" onchange="this.form.submit()" value={{status[0]}} name="init_status" id=status_{{status[0]}}>
                                     </form>
                                     
-                                    <p>{{status}}</p>
+                                    <p>{{status[1]}}</p>
                                 
                                     
-                                    <form action="/status/delete" method="post">
+                                    <form action="/status/delete?theChosenOne={{theChosenOne}}" method="post">
                                         <button name="status_name" value={{status[0]}}>remove</button>
                                     </form>
                                 </div>
@@ -44,7 +44,7 @@
                     
                     <h3>Add transition</h3>
                     
-                    <form class="element" action="/transition" method="post">
+                    <form class="element" action="/transition?theChosenOne={{theChosenOne}}" method="post">
                         <input name="name" />
                         
                         <p>from: </p>
@@ -77,20 +77,15 @@
                     {%endfor%}
                 </div>    
             </div>
-            <form action="/reset" method="post">
+            <form action="/reset?theChosenOne={{theChosenOne}}" method="post">
                 <button name="reset" class="theBigRedThing">reset</button>
             </form>
         </div>
     </body>
 
     <script>
-        function sendPostRequest(radioButton) {
-          const xhr = new XMLHttpRequest();
-          xhr.open('POST', '/init', true);
-          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-          xhr.send(`option=${radioButton.value}`);
-        }
-      </script>
+        document.querySelector("#status_{{theChosenOne}}").checked = true;
+    </script>
     
       
       

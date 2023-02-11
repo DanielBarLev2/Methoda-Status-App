@@ -19,7 +19,7 @@ def update_init(status_table: list, new_init_status: str):
             status_table[index][2] = True
             status_table[index][2] = True
 
-        return status_table, new_init_status
+    return status_table, new_init_status
 
 
 def update_orphans(database, status_table: list, init_status_name: str, counter: int):
@@ -112,6 +112,6 @@ def get_statuses_stats(status_list: list) -> list:
         if status[3]:
             new_status += " [FINAL]"
 
-        new_status_list.append(f'{new_status} ')
+        new_status_list.append([status[0], f'{new_status} '])
 
     return new_status_list
