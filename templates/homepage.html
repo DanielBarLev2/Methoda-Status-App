@@ -3,19 +3,20 @@
 <html>
 
     <head>
-        <meta charset="utf-8">
+        <meta charset="utf-8">`
         <meta name="viewpoint" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="/static/style/styles.css">
     </head>
 
     <body>
 
-        <h1 style="text-align: center;">Build A workflow</h1>
+        <h1 class="header">Build A workflow</h1>
+
         <div class="center">
             <div class="centerElements">
                 <div>
-                    <h3>Add status</h3>
-
+                    <h3>Add a status</h3>
+                    
                     <form class="element" action="/status?theChosenOne={{theChosenOne}}" method="post">
                         <input name="status_name" value="{{status_name}}" autocomplete="off" required/>
                         <button class="submit">Add</button>
@@ -25,24 +26,26 @@
                         {%for status in status_table%}
                             <li>
                                 <div class="element">
-                                    <form action="/init?theChosenOne={{theChosenOne}}" method="post">
-                                        <input type="radio" onchange="this.form.submit()" value={{status[0]}} name="init_status" id=status_{{status[0]}}>
-                                    </form>
-                                    
-                                    <p>{{status[1]}}</p>
-                                
                                     
                                     <form action="/status/delete?theChosenOne={{theChosenOne}}" method="post">
                                         <button name="status_name" value={{status[0]}}>remove</button>
                                     </form>
+
+                                    <form action="/init?theChosenOne={{theChosenOne}}" method="post">
+                                        <input type="radio" onchange="this.form.submit()" value={{status[0]}} name="init_status" id=status_{{status[0]}}>
+                                    </form>
+
+                                    <p>{{status[1]}}</p>
+                                    
                                 </div>
                             </li>
                         {%endfor%}
                     </ul>
+
                 </div>
+                
                 <div>
-                    
-                    <h3>Add transition</h3>
+                    <h3>Add a transition</h3>
                     
                     <form class="element" action="/transition?theChosenOne={{theChosenOne}}" method="post">
                         <input name="name" />
@@ -66,20 +69,30 @@
                     </form>
 
                     {%for transition in transition_table%}
-                    <div class="element">
-                        <P>{{transition.name}}: {{transition.from_status}} ==> {{transition.to_status}}</P>
+                   
+                    <ul class="rowElements">
+                        <li>
+                            <div class="element">
+                            
+                                <form action="/transition/delete?theChosenOne={{theChosenOne}}" method="post">
+                                    <button name="transition_name" value={{transition.name}}>remove</button>
+                                </form>
 
-                        <form action="/transition/delete" method="post">
-                            <button name="transition_name" value={{transition.name}}>remove</button>
-                        </form>
-                    </div>
+                                <P> {{transition.name}}: {{transition.from_status}} ==> {{transition.to_status}}</P>
+                            
+                            </div>
+                        </li>
+                    </ul>
+                    
 
                     {%endfor%}
                 </div>    
             </div>
+
             <form action="/reset?theChosenOne={{theChosenOne}}" method="post">
                 <button name="reset" class="theBigRedThing">reset</button>
             </form>
+
         </div>
     </body>
 
