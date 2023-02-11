@@ -38,9 +38,7 @@ def get_status():
 # @todo: radio input is not working
 @basic_routes_handling.route("/init", methods=['post'])
 def set_init_status():
-    status_table = []
-
-    update_init(status_table=status_table)
+    return
 
 
 @basic_routes_handling.route("/status", methods=['post'])
@@ -83,7 +81,7 @@ def add_transition():
                 or db.session.query(Transition).filter(Transition.to_status == request.form['to_status']).first() \
                 is None:
             # create new status
-            if request.form['name'] is not None:
+            if request.form['name'] is not None and request.form['name'] != "":
                 new_transition = Transition(name=request.form['name'], to_status=request.form['to_status'],
                                             from_status=request.form['from_status'])
                 db.session.add(new_transition)
@@ -101,4 +99,18 @@ def delete_transition():
         db.session.commit()
 
         return redirect('/')
+    return redirect('/')
+
+
+@basic_routes_handling.route("/reset", methods=['post'])
+def reset():
+
+    reset_list = Status.query.all()
+    reset_list += Transition.query.all()
+
+    for data in reset_list:
+        db.session.delete(data)
+
+    db.session.commit()
+
     return redirect('/')
